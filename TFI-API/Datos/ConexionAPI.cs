@@ -8,7 +8,7 @@ using TFI_API.Negocio;
 
 namespace TFI_API.Datos
 {
-    internal class ConexionAPI
+    public class ConexionAPI
     {
         RestClient client;
         List<string> Categories;
@@ -30,7 +30,7 @@ namespace TFI_API.Datos
             Categories = client.Get<List<string>>(request);
             return Categories;
         }
-        public List<Producto> PostProducts(List<Producto> listProductsToUpdate, Producto newProduct)
+        public List<Producto> PostProducts(List<Producto> listProductsToUpdate, Producto nuevoProducto)
         {
             var request = new RestRequest("products", Method.Post);
 
@@ -39,7 +39,7 @@ namespace TFI_API.Datos
                 listProductsToUpdate = new List<Producto>();
             }
 
-            listProductsToUpdate.Add(newProduct);
+            listProductsToUpdate.Add(nuevoProducto);
 
             return listProductsToUpdate;
         }

@@ -9,12 +9,13 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using TFI_API.Datos;
 using TFI_API.Negocio;
+using TFI_API.Presentación;
 
 namespace TFI_API
 {
     public partial class FormProductos : Form
     {
-        private ConexionAPI conexionApi;
+        public ConexionAPI conexionApi;
         public FormProductos()
         {
             InitializeComponent();
@@ -22,7 +23,7 @@ namespace TFI_API
             CargarProductos();
         }
         
-        private void CargarProductos()
+        public void CargarProductos()
         {
             try
             {
@@ -35,7 +36,7 @@ namespace TFI_API
             }
         }
 
-        private void btnEliminar_Click(object sender, EventArgs e)
+        public void btnEliminar_Click(object sender, EventArgs e)
         {
             if (dgvProductos.SelectedRows.Count > 0)
             {
@@ -58,25 +59,11 @@ namespace TFI_API
                 }
             }
         }
-        private void btnAgregar_Click(object sender, EventArgs e)
-        {
-            Producto nuevoProducto = new Producto()
-            {
-                Title = txtTitulo.Text,
-                Price = decimal.Parse(txtPrecio.Text),
-                Category = txtCategoria.Text,
-                Description = txtDescripcion.Text
-            };
 
-            try
-            {
-                var productosActualizados = conexionApi.PostProducts((List<Producto>)dgvProductos.DataSource, nuevoProducto);
-                dgvProductos.DataSource = productosActualizados;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error al agregar el producto: {ex.Message}");
-            }
+        public void btnAgregar_Click(object sender, EventArgs e)
+        {
+            FormCrear formCrear = new FormCrear();
+            formCrear.ShowDialog();
         }
     }
 }
