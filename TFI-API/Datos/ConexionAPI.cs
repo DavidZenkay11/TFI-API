@@ -1,8 +1,12 @@
-﻿using RestSharp;
+﻿using Newtonsoft.Json;
+using NLog;
+using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using TFI_API.Negocio;
 
@@ -10,6 +14,7 @@ namespace TFI_API.Datos
 {
     public class ConexionAPI
     {
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         RestClient client;
         List<string> Categories;
 
@@ -18,17 +23,143 @@ namespace TFI_API.Datos
             client = new RestClient(url);
         }
 
-        public List<Producto> GetProducts()
+        public ConexionAPI()
         {
-            var request = new RestRequest("products", Method.Get);
-            List<Producto> products = client.Get<List<Producto>>(request);
-            return products;
         }
-        public List<string> GetCategories()
+
+        public string GetProducts(List<Producto> listProductsToUpdate)
         {
-            var request = new RestRequest("products/categories", Method.Get);
-            Categories = client.Get<List<string>>(request);
-            return Categories;
+            try
+            {
+                var request = new RestRequest("products", Method.Get);
+                var response = client.Get(request);
+
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    var products = JsonConvert.DeserializeObject<List<Producto>>(response.Content);
+
+                    logger.Info($"Productos obtenidos: {products.Count}");
+
+                    listProductsToUpdate.Clear();
+                    listProductsToUpdate.AddRange(products);
+
+                    // Loguear la salida del método
+                    logger.Info("Metodo GetProducts finalizado correctamente. Lista de productos actualizada.");
+
+                    return "Conexión Exitosa";
+                }
+                else
+                {
+                    logger.Error($"Error al obtener los productos. StatusCode: {response.StatusCode}");
+
+                    return "Error al obtener los productos";
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Excepcion en el metodo GetProducts");
+
+                return "Error al obtener los productos";
+            }
+        }
+        public string GetCategories(List<string> ListCategoriesToUpdate)
+        {
+            try
+            {
+                logger.Info($"Llamada al metodo GetCategories.");
+
+                var request = new RestRequest("products/categories", Method.Get);
+                var response = client.Get(request);
+
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    var categories = JsonConvert.DeserializeObject<List<string>>(response.Content);
+
+                    ListCategoriesToUpdate.Clear();
+                    ListCategoriesToUpdate.AddRange(categories);
+
+                    logger.Info($"Categorias obtenidas correctamente. Categorias: {string.Join(", ", categories)}");
+                    return "Categorias obtenidas correctamente";
+                }
+                else
+                {
+                    logger.Warn($"Error al obtener las categorías. Código de estado: {response.StatusCode}");
+                    return "Error al obtener las categorías";
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Ocurrio un error en el metodo GetCategories.");
+                return "Error al obtener las categorias";
+            }
+        }
+        public void GetInCategory(List<Producto> ListProductsToUpdate, string category)
+        {
+            try
+            {
+                logger.Info($"Llamada al metodo GetInCategory.");
+
+                var request = new RestRequest($"products/categories/{category}", Method.Get);
+                var response = client.Get(request);
+
+                ListProductsToUpdate.RemoveAll(p => p.Category != category);
+                logger.Info($"Productos filtrados por categoria {category}. Total productos despues de filtrar: {ListProductsToUpdate.Count}");
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Ocurrio un error en el metodo GetInCategory.");
+            }
+        }
+        public List<Producto> LimitResult(List<Producto> ListProductsToUpdate, int limitNumber)
+        {
+            try
+            {
+                logger.Info($"Llamada al metodo LimitResult.");
+
+                var request = new RestRequest($"products?limit={limitNumber}", Method.Get);
+                var response = client.Get(request);
+
+                logger.Info($"Productos limitados en {limitNumber}.");
+                return ListProductsToUpdate.Take(limitNumber).ToList();
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Ocurrio un error en el metodo LimitResult.");
+                return new List<Producto>();
+            }
+        }
+        public void SortResults(List<Producto> listProductsToUpdate, string order)
+        {
+            try
+            {
+                logger.Info($"Llamada al metodo SortResults.");
+
+                var request = new RestRequest("products/products?sort=desc", Method.Get);
+                var response = client.Get(request);
+
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    if (order == "Ascendente")
+                    {
+                        listProductsToUpdate.Sort((p1, p2) => p1.Id.CompareTo(p2.Id));
+                        logger.Info($"Productos ordenados de forma ascendente");
+                    }
+                    else
+                    {
+                        listProductsToUpdate.Sort((p1, p2) => p2.Id.CompareTo(p1.Id));
+                        logger.Info($"Productos ordenados de forma descendente");
+                    }
+                }
+                else
+                {
+                    logger.Warn($"Error al ordenar los productos. Codigo de estado: {response.StatusCode}");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Ocurrio un error en el metodo SortResults.");
+            }
         }
         public List<Producto> PostProducts(List<Producto> listProductsToUpdate, Producto nuevoProducto)
         {

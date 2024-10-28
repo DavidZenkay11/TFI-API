@@ -38,6 +38,9 @@
             this.txtTitulo = new System.Windows.Forms.TextBox();
             this.btnAgregar = new System.Windows.Forms.Button();
             this.dgvProductos = new System.Windows.Forms.DataGridView();
+            this.txtId = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.btnCancel = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvProductos)).BeginInit();
             this.SuspendLayout();
             // 
@@ -111,7 +114,7 @@
             // 
             // btnAgregar
             // 
-            this.btnAgregar.Location = new System.Drawing.Point(96, 166);
+            this.btnAgregar.Location = new System.Drawing.Point(55, 166);
             this.btnAgregar.Name = "btnAgregar";
             this.btnAgregar.Size = new System.Drawing.Size(75, 23);
             this.btnAgregar.TabIndex = 10;
@@ -126,11 +129,40 @@
             this.dgvProductos.Size = new System.Drawing.Size(240, 141);
             this.dgvProductos.TabIndex = 11;
             // 
+            // txtId
+            // 
+            this.txtId.Location = new System.Drawing.Point(183, 30);
+            this.txtId.Name = "txtId";
+            this.txtId.Size = new System.Drawing.Size(76, 20);
+            this.txtId.TabIndex = 12;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(93, 33);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(18, 13);
+            this.label5.TabIndex = 13;
+            this.label5.Text = "ID";
+            // 
+            // btnCancel
+            // 
+            this.btnCancel.Location = new System.Drawing.Point(136, 166);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(75, 23);
+            this.btnCancel.TabIndex = 14;
+            this.btnCancel.Text = "Cancelar";
+            this.btnCancel.UseVisualStyleBackColor = true;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            // 
             // FormCrear
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(303, 338);
+            this.Controls.Add(this.btnCancel);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.txtId);
             this.Controls.Add(this.dgvProductos);
             this.Controls.Add(this.btnAgregar);
             this.Controls.Add(this.txtDescripcion);
@@ -143,6 +175,7 @@
             this.Controls.Add(this.label1);
             this.Name = "FormCrear";
             this.Text = "FormCrear";
+            this.Load += new System.EventHandler(this.FormCrear_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvProductos)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -161,5 +194,8 @@
         private System.Windows.Forms.TextBox txtTitulo;
         private System.Windows.Forms.Button btnAgregar;
         private System.Windows.Forms.DataGridView dgvProductos;
+        private System.Windows.Forms.TextBox txtId;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Button btnCancel;
     }
 }
