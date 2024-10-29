@@ -25,6 +25,8 @@ namespace TFI_API
             Categorias = new List<string>();
             InitializeComponent();
             conexionApi = new ConexionAPI("https://fakestoreapi.com/");
+            //var url = ConfigurationManager.AppSettings["urlApi"].ToString();
+            //MessageBox.Show(url)
             //CargarProductos();
         }
         
@@ -79,7 +81,7 @@ namespace TFI_API
             {
                 if (formcrear.ShowDialog() == DialogResult.OK)
                 {
-                    this.Products = formcrear.nuevoProducto;
+                    this.Products = formcrear.newProduct;
 
                     dgvProductos.DataSource = null;
                     dgvProductos.DataSource = this.Products;
@@ -90,8 +92,9 @@ namespace TFI_API
         private void FormProductos_Load(object sender, EventArgs e)
         {
             MessageBox.Show(conexionApi.GetProducts(Products));
+            ProductoFiltrado = new List<Producto>(Products);
             conexionApi.GetCategories(Categorias);
-
+            dgvProductos.DataSource = Products;
             Categorias.Insert(0, "All");
             cmbCategoria.DataSource = Categorias;
             cmbCategoria.SelectedIndex = 0;

@@ -15,12 +15,14 @@ namespace TFI_API.Presentación
 {
     public partial class FormCrear : Form
     {
-        public List<Producto> nuevoProducto { get; private set; }
+        private ErrorProvider _errorProvider = new ErrorProvider();
+        public List<Producto> newProduct { get; private set; }
+
         public ConexionAPI conexionApi;
         public FormCrear(List<Producto> existingProducts)
         {
             InitializeComponent();
-            this.nuevoProducto = existingProducts;
+            this.newProduct = existingProducts;
         }
 
         public FormCrear()
@@ -29,24 +31,30 @@ namespace TFI_API.Presentación
 
         private void btnAgregar_Click(object sender, EventArgs e)
         {
-            ConexionAPI connecectionApi = new ConexionAPI();
-            Producto nuevoProducto = new Producto()
+            ConexionAPI conexionApi = new ConexionAPI();
+            string title = txtTitulo.Text;
+            string priceText = txtPrecio.Text;
+            decimal price = Convert.ToDecimal(priceText);
+            Producto product = new Producto()
             {
                 Title = txtTitulo.Text,
                 Price = decimal.Parse(txtPrecio.Text),
                 Category = txtCategoria.Text,
                 Description = txtDescripcion.Text
             };
-            
 
-            try
+            int id = int.Parse(txtId.Text);
+            /*try
             {
                 var productosActualizados = conexionApi.PostProducts((List<Producto>)dgvProductos.DataSource, nuevoProducto);
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error al agregar el producto: {ex.Message}");
-            }
+            }*/
+            MessageBox.Show(conexionApi.PostProducts(newProduct, product));
+            this.DialogResult = DialogResult.OK;
+            this.Dispose();
         }
         private void btnAccept_Click(object sender, EventArgs e)
         {
@@ -85,9 +93,9 @@ namespace TFI_API.Presentación
         }
         private int GetNextProductId()
         {
-            if (nuevoProducto != null && nuevoProducto.Count > 0)
+            if (newProduct != null && newProduct.Count > 0)
             {
-                return nuevoProducto.Max(p => p.Id) + 1;
+                return newProduct.Max(p => p.Id) + 1;
             }
             return 1;
         }

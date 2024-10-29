@@ -161,18 +161,32 @@ namespace TFI_API.Datos
                 logger.Error(ex, "Ocurrio un error en el metodo SortResults.");
             }
         }
-        public List<Producto> PostProducts(List<Producto> listProductsToUpdate, Producto nuevoProducto)
+        public string PostProducts(List<Producto> listProductsToUpdate, Producto newProduct)
         {
-            var request = new RestRequest("products", Method.Post);
-
-            if (listProductsToUpdate == null)
+            try
             {
-                listProductsToUpdate = new List<Producto>();
+                logger.Info($"Llamada al metodo PostProducts.");
+                var request = new RestRequest("products", Method.Post);
+                request.AddJsonBody(newProduct);
+                var response = client.Post(request);
+
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    listProductsToUpdate.Add(newProduct);
+                    logger.Info($"Producto {newProduct.Title} agregado correctamente.");
+                    return "Producto agregado correctamente";
+                }
+                else
+                {
+                    logger.Warn($"Error al agregar el producto {newProduct.Title}. Codigo de estado: {response.StatusCode}");
+                    return "No se pudo agregar el producto";
+                }
             }
-
-            listProductsToUpdate.Add(nuevoProducto);
-
-            return listProductsToUpdate;
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Ocurrio un error en el metodo PostProducts.");
+                return "Ocurrio un error en el metodo PostProducts.";
+            }
         }
         public List<Producto> DeleteProducts(List<Producto> listProductsToUpdate, List<int> listIds)
         {
