@@ -165,39 +165,63 @@ namespace TFI_API.Datos
         {
             try
             {
-                logger.Info($"Llamada al metodo PostProducts.");
+                logger.Info("Llamada al método PostProducts.");
+
+                // Configuración de la solicitud
                 var request = new RestRequest("products", Method.Post);
                 request.AddJsonBody(newProduct);
+
+                // Realiza la solicitud POST
                 var response = client.Post(request);
 
-                if (response.StatusCode == HttpStatusCode.OK)
+                // Verificación de la respuesta
+                if (response.IsSuccessful && response.StatusCode == HttpStatusCode.Created)
                 {
                     listProductsToUpdate.Add(newProduct);
-                    logger.Info($"Producto {newProduct.Title} agregado correctamente.");
-                    return "Producto agregado correctamente";
+                    logger.Info($"Producto '{newProduct.Title}' agregado correctamente.");
+                    return "Producto agregado correctamente.";
                 }
                 else
                 {
-                    logger.Warn($"Error al agregar el producto {newProduct.Title}. Codigo de estado: {response.StatusCode}");
-                    return "No se pudo agregar el producto";
+                    logger.Warn($"Error al agregar el producto '{newProduct.Title}'. Código de estado: {response.StatusCode}. Mensaje: {response.Content}");
+                    return $"No se pudo agregar el producto. Código de estado: {response.StatusCode}";
                 }
             }
             catch (Exception ex)
             {
-                logger.Error(ex, "Ocurrio un error en el metodo PostProducts.");
-                return "Ocurrio un error en el metodo PostProducts.";
+                logger.Error(ex, "Ocurrió un error en el método PostProducts.");
+                return "Ocurrió un error al agregar el producto.";
             }
         }
-        public List<Producto> DeleteProducts(List<Producto> listProductsToUpdate, List<int> listIds)
+        public string DeleteProducts(List<Producto> listProductsToUpdate, List<int> listIds)
         {
-            foreach (int productId in listIds)
+            try
             {
-                var request = new RestRequest($"products/{productId}", Method.Delete);
-                Producto response = client.Delete<Producto>(request);
-            }
-            listProductsToUpdate.RemoveAll(item => listIds.Contains(item.Id));
+                foreach (int productId in listIds)
+                {
+                    logger.Info("Ejecutando metodo DeleteProducts");
+                    var request = new RestRequest($"products/{productId}", Method.Delete);
+                    var response = client.Delete(request);
 
-            return listProductsToUpdate;
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        listProductsToUpdate.RemoveAll(item => listIds.Contains(item.Id));
+                        logger.Info($"Producto(s) eliminado(s) correctamente: {listIds.Count}");
+                        return "Productos eliminados correctamente";
+                    }
+                    else
+                    {
+                        logger.Warn($"Fallo al eliminar productos. Codigo de estado: {response.StatusCode}");
+                        return "Error al llamar a DeleteProducts";
+                    }
+                }
+                return "";
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Error en el metodo DeleteProducts");
+                return "Error al eliminar el producto";
+            }
         }
         public List<Producto> PutProducts(List<Producto> ListProductsToUpdate, Producto productToEdit)
         {

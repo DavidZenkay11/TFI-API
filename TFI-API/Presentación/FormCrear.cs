@@ -18,23 +18,31 @@ namespace TFI_API.Presentación
         private ErrorProvider _errorProvider = new ErrorProvider();
         public List<Producto> newProduct { get; private set; }
 
-        public ConexionAPI conexionApi;
+        
         public FormCrear(List<Producto> existingProducts)
         {
             InitializeComponent();
             this.newProduct = existingProducts;
         }
 
-        public FormCrear()
+        /*public FormCrear()
         {
-        }
+        }*/
 
         private void btnAgregar_Click(object sender, EventArgs e)
         {
             ConexionAPI conexionApi = new ConexionAPI();
             string title = txtTitulo.Text;
             string priceText = txtPrecio.Text;
-            decimal price = Convert.ToDecimal(priceText);
+            decimal price = Convert.ToDecimal(priceText); 
+            int id = int.Parse(txtId.Text);
+
+            if (!ValidateFields())
+            {
+                MessageBox.Show("Por favor, corrija los errores antes de continuar.", "Error de validación", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             Producto product = new Producto()
             {
                 Title = txtTitulo.Text,
@@ -43,47 +51,7 @@ namespace TFI_API.Presentación
                 Description = txtDescripcion.Text
             };
 
-            int id = int.Parse(txtId.Text);
-            /*try
-            {
-                var productosActualizados = conexionApi.PostProducts((List<Producto>)dgvProductos.DataSource, nuevoProducto);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error al agregar el producto: {ex.Message}");
-            }*/
             MessageBox.Show(conexionApi.PostProducts(newProduct, product));
-            this.DialogResult = DialogResult.OK;
-            this.Dispose();
-        }
-        private void btnAccept_Click(object sender, EventArgs e)
-        {
-            ConexionAPI conexionApi = new ConexionAPI();
-            string title = txtTitulo.Text;
-            string priceText = txtPrecio.Text;
-            decimal price = Convert.ToDecimal(priceText);
-
-            /*if (!ValidateFields())
-            {
-                MessageBox.Show("Por favor, corrija los errores antes de continuar.", "Error de validación", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }*/
-
-            int id = int.Parse(txtId.Text);
-
-            Producto product = new Producto
-            {
-                Id = id,
-                Title = title,
-                Price = price,
-                Description = txtDescripcion.Text,
-                Category = txtCategoria.Text
-            };
-
-
-
-            //MessageBox.Show(conexionApi.PostProducts(nuevoProducto, product));
-
             this.DialogResult = DialogResult.OK;
             this.Dispose();
         }
@@ -104,31 +72,40 @@ namespace TFI_API.Presentación
         {
             this.Close();
         }
-    }/*private ErrorProvider _errorProvider = new ErrorProvider();
-        public List<ApiProducts> newProducts { get; private set; }
-
-        public FrmNew(List<ApiProducts> existingProducts)
+        private bool ValidateFields()
         {
-            InitializeComponent();
-            this.newProducts = existingProducts;
+            bool isValid = true;
+
+            if (string.IsNullOrWhiteSpace(txtTitulo.Text))
+            {
+                _errorProvider.SetError(txtTitulo, "El campo Title es obligatorio.");
+                isValid = false;
+            }
+            else
+            {
+                _errorProvider.SetError(txtTitulo, string.Empty);
+            }
+
+            if (string.IsNullOrWhiteSpace(txtPrecio.Text) || !decimal.TryParse(txtPrecio.Text, out decimal price) || price <= 0)
+            {
+                _errorProvider.SetError(txtPrecio, "El campo Price debe ser un número válido mayor que cero.");
+                isValid = false;
+            }
+            else
+            {
+                _errorProvider.SetError(txtPrecio, string.Empty);
+            }
+
+            return isValid;
         }
 
-        private void btnCancel_Click(object sender, EventArgs e)
+        private void btnAgregar_Click_1(object sender, EventArgs e)
         {
-            this.Close();
-        }
-
-        private void FrmNew_Load(object sender, EventArgs e)
-        {
-            txtBoxId.Text = GetNextProductId().ToString();
-        }
-
-        private void btnAccept_Click(object sender, EventArgs e)
-        {
-            ConnecectionApi connecectionApi = new ConnecectionApi();
-            string title = txtBoxTitle.Text;
-            string priceText = txtBoxPrice.Text;
+            ConexionAPI conexionApi = new ConexionAPI();
+            string title = txtTitulo.Text;
+            string priceText = txtPrecio.Text;
             decimal price = Convert.ToDecimal(priceText);
+            int id = int.Parse(txtId.Text);
 
             if (!ValidateFields())
             {
@@ -136,51 +113,17 @@ namespace TFI_API.Presentación
                 return;
             }
 
-            int id = int.Parse(txtBoxId.Text);
-
-            ApiProducts product = new ApiProducts
+            Producto product = new Producto()
             {
-                Id = id,
-                Title = title,
-                Price = price,
-                Description = txtBoxDescription.Text,
-                Category = txtBoxCategory.Text
+                Title = txtTitulo.Text,
+                Price = decimal.Parse(txtPrecio.Text),
+                Category = txtCategoria.Text,
+                Description = txtDescripcion.Text
             };
 
-            
-
-            MessageBox.Show(connecectionApi.PostProducts(newProducts, product));
-
+            MessageBox.Show(conexionApi.PostProducts(newProduct, product));
             this.DialogResult = DialogResult.OK;
             this.Dispose();
         }
-
-        private bool ValidateFields()
-        {
-            bool isValid = true;
-
-            if (string.IsNullOrWhiteSpace(txtBoxTitle.Text))
-            {
-                _errorProvider.SetError(txtBoxTitle, "El campo Title es obligatorio.");
-                isValid = false;
-            }
-            else
-            {
-                _errorProvider.SetError(txtBoxTitle, string.Empty);
-            }
-
-            if (string.IsNullOrWhiteSpace(txtBoxPrice.Text) || !decimal.TryParse(txtBoxPrice.Text, out decimal price) || price <= 0)
-            {
-                _errorProvider.SetError(txtBoxPrice, "El campo Price debe ser un número válido mayor que cero.");
-                isValid = false;
-            }
-            else
-            {
-                _errorProvider.SetError(txtBoxPrice, string.Empty);
-            }
-
-            return isValid;
-        }
-
-    }*/
+    }
 }

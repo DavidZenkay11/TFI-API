@@ -67,16 +67,16 @@ namespace TFI_API
             }
         }
 
-        public void btnAgregar_Click(object sender, EventArgs e)
+        /*public void btnAgregar_Click(object sender, EventArgs e)
         {
            // FormCrear formCrear = new FormCrear();
             //formCrear.Show();
-        }
+        }*/
 
         private void btnAgregar_Click_1(object sender, EventArgs e)
         {
-            FormCrear formCrear = new FormCrear();
-            formCrear.Show();
+          
+            
             using (FormCrear formcrear = new FormCrear(this.Products))
             {
                 if (formcrear.ShowDialog() == DialogResult.OK)
@@ -136,6 +136,84 @@ namespace TFI_API
         private void panel1_Paint(object sender, PaintEventArgs e)
         {
 
+        }
+
+        private void txtCategoria_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dgvProductos_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0) return;
+
+            var filteredProducts = (List<Producto>)dgvProductos.DataSource;
+            var selectedProduct = filteredProducts[e.RowIndex];
+
+            /*using (FormEditar form = new FormEditar(selectedProduct, this.Products, this.Categorias))
+            {
+                if (form.ShowDialog() == DialogResult.OK)
+                {
+                    this.Categorias = form.newCategory;
+
+                    cmbCategoria.DataSource = null;
+                    cmbCategoria.DataSource = Categorias;
+                    dgvProductos.Refresh();
+                    cmbCategoria.SelectedIndex = 0;
+                }
+            }*/
+        }
+
+        private void btnAscDesc_Click(object sender, EventArgs e)
+        {
+            string selectedCategory = cmbCategoria.SelectedItem?.ToString();
+
+            if (selectedCategory != "All")
+            {
+                conexionApi.SortResults(Products, btnAscDesc.Text);
+                dgvProductos.DataSource = null;
+                dgvProductos.DataSource = Products
+                    .Where(p => p.Category != null && p.Category.Equals(selectedCategory))
+                    .ToList();
+            }
+            else
+            {
+                conexionApi.SortResults(Products, btnAscDesc.Text);
+                dgvProductos.DataSource = null;
+                dgvProductos.DataSource = Products;
+            }
+
+            if (btnAscDesc.Text == "Descendente")
+            {
+                btnAscDesc.Text = "Ascendente";
+            }
+            else
+            {
+                btnAscDesc.Text = "Descendente";
+            }
+        }
+
+        private void btnEliminar_Click_1(object sender, EventArgs e)
+        {
+            if (dgvProductos.SelectedRows.Count > 0)
+            {
+                var selectedIds = new List<int>();
+                foreach (DataGridViewRow row in dgvProductos.SelectedRows)
+                {
+                    int selectedId = Convert.ToInt32(row.Cells["Id"].Value);
+                    selectedIds.Add(selectedId);
+                }
+
+                string resultMessage = conexionApi.DeleteProducts(Products, selectedIds);
+                MessageBox.Show(resultMessage);
+
+                dgvProductos.DataSource = null;  // Desvincula el DataSource temporalmente
+                dgvProductos.DataSource = Products;  // Vuelve a asignar la lista actualizada
+            }
+            else
+            {
+                MessageBox.Show("Por favor, seleccione una fila.");
+            }
         }
     }
 }
