@@ -1,9 +1,12 @@
-﻿using System;
+﻿using RestSharp;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -14,11 +17,9 @@ namespace TFI_API.Presentación
 {
     public partial class FormEditar : Form
     {
-        private readonly ErrorProvider _errorProvider = new ErrorProvider();
-        private readonly ConexionAPI _connecectionApi;
-        private Producto _product;
-        public List<Producto> EditedProducts { get; private set; }
-        public List<string> newCategory { get; private set; }
+        string url = ConfigurationManager.AppSettings["urlApi"];
+        private readonly FormProductos formProductos;
+        private readonly ErrorProvider errorProvider = new ErrorProvider();
         public FormEditar(int id, FormCrear form)
         {
             InitializeComponent();
@@ -34,79 +35,78 @@ namespace TFI_API.Presentación
             txtPrecio.Text = product.Price.ToString();
         }
 
-        private void btnAcceptEdit_Click(object sender, EventArgs e)
+        private void btnActualizar_Click(object sender, EventArgs e)
         {
-            if (!ValidateFields())
+            errorProvider.Clear();
+            if (ValidarCampos())
             {
-                MessageBox.Show("Por favor, corrija los errores antes de continuar.", "Error de validación", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            if (!string.IsNullOrEmpty(txtCategoria.Text))
-            {
-                if (!newCategory.Contains(txtCategoria.Text))
+                var productoActualizado = new Producto();
                 {
-                    newCategory.Add(txtCategoria.Text);
-                }
-            }
-
-            var updatedProduct = GetUpdatedProductFromFields();
-            //MessageBox.Show(_connecectionApi.PutProducts(EditedProducts, updatedProduct));
-            this.DialogResult = DialogResult.OK;
-            this.Dispose();
-        }
-
-        private Producto GetUpdatedProductFromFields()
-        {
-            return new Producto
-            {
-                Id = int.Parse(txtId.Text),
-                Title = txtTitulo.Text,
-                Price = decimal.Parse(txtPrecio.Text),
-                Description = txtDescripcion.Text,
-                Category = txtCategoria.Text
-            };
-        }
-
-        private bool ValidateFields()
-        {
-            bool isValid = true;
-
-            if (string.IsNullOrWhiteSpace(txtTitulo.Text))
-            {
-                _errorProvider.SetError(txtTitulo, "El campo Title es obligatorio.");
-                isValid = false;
+                    int Id = int.Parse(txtId.Text);
+                    decimal Price = decimal.Parse(txtPrecio.Text);
+                    string Title = txtTitulo.Text;
+                    string Description = txtDescripcion.Text;
+                    string Category = txtCategoria.Text;
+                };
+                GuardarProducto(productoActualizado);
             }
             else
             {
-                _errorProvider.SetError(txtTitulo, string.Empty);
+                DialogResult result = MessageBox.Show("Algunos campos obligatorios están vacíos o no cumplen con los requisitos. ¿Querés cancelar la edición de producto?", "Error de validación", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (result == DialogResult.Yes)
+                {
+                    this.Close();
+                }
             }
-
-            if (!ValidatePrice())
+        }
+        private void GuardarProducto(Producto producto)
+        {
+            try
             {
+                var client = new RestClient(url);
+                var request = new RestRequest($"products/{producto.Id}", Method.Put).AddJsonBody(producto);
+                var response = client.Put(request);
+                if (response.IsSuccessful)
+                {
+                    MessageBox.Show("Producto actualizado correctamente.");
+                    formProductos.EditarProducto(producto);
+                    this.Close();
+                }
+                else
+                {
+                    MostrarError("Error al actualizar el producto", response.ErrorMessage);
+                }
+            }
+            catch (Exception ex)
+            {
+                MostrarError("Ocurrió un error al intentar actualizar el producto", ex.Message);
+            }
+        }
+        private void MostrarError(string mensaje, string detalle)
+        {
+            MessageBox.Show($"{mensaje}: {detalle}");
+            this.Close();
+        }
+        private bool ValidarCampos()
+        {
+            bool isValid = true;
+            if (string.IsNullOrWhiteSpace(txtTitulo.Text))
+            {
+                errorProvider.SetError(txtTitulo, "El título es obligatorio.");
                 isValid = false;
             }
-
+            if (!decimal.TryParse(txtPrecio.Text, out decimal price) || price <= 0)
+            {
+                errorProvider.SetError(txtPrecio, "El precio es obligatorio y debe ser mayor que 0.");
+                isValid = false;
+            }
+            if (string.IsNullOrWhiteSpace(txtId.Text) || !int.TryParse(txtId.Text, out _))
+            {
+                errorProvider.SetError(txtId, "El ID es obligatorio y debe ser un número válido.");
+                isValid = false;
+            }
             return isValid;
         }
 
-        private bool ValidatePrice()
-        {
-            if (string.IsNullOrWhiteSpace(txtPrecio.Text) || !decimal.TryParse(txtPrecio.Text, out decimal price) || price <= 0)
-            {
-                _errorProvider.SetError(txtPrecio, "El campo Precio debe ser un número válido mayor que cero.");
-                return false;
-            }
-            else
-            {
-                _errorProvider.SetError(txtPrecio, string.Empty);
-                return true;
-            }
-        }
-
-        private void btnCancelEdit_Click(object sender, EventArgs e)
-        {
-            this.Dispose();
-        }
     }
 }

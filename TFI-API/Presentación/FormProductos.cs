@@ -204,5 +204,19 @@ namespace TFI_API
                 MessageBox.Show("Seleccione un producto para editar.");
             }
         }
+        public void EditarProducto(Producto productoActualizado)
+        {
+            foreach (DataGridViewRow row in dgvProductos.Rows)
+            {
+                if ((int)row.Cells["Id"].Value == productoActualizado.Id)
+                {
+                    row.Cells["Price"].Value = productoActualizado.Price;
+                    row.Cells["Title"].Value = productoActualizado.Title;
+                    row.Cells["Description"].Value = productoActualizado.Description;
+                    row.Cells["Category"].Value = productoActualizado.Category;
+                    break;
+                }
+            }
+        }
     }
 }

@@ -75,11 +75,12 @@
             this.btnActualizar.TabIndex = 23;
             this.btnActualizar.Text = "Actualizar";
             this.btnActualizar.UseVisualStyleBackColor = true;
+            this.btnActualizar.Click += new System.EventHandler(this.btnActualizar_Click);
             // 
             // txtDescripcion
             // 
             this.txtDescripcion.Location = new System.Drawing.Point(116, 136);
-            this.txtDescripcion.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtDescripcion.Margin = new System.Windows.Forms.Padding(2);
             this.txtDescripcion.Name = "txtDescripcion";
             this.txtDescripcion.Size = new System.Drawing.Size(76, 20);
             this.txtDescripcion.TabIndex = 22;
@@ -87,7 +88,7 @@
             // txtPrecio
             // 
             this.txtPrecio.Location = new System.Drawing.Point(116, 184);
-            this.txtPrecio.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtPrecio.Margin = new System.Windows.Forms.Padding(2);
             this.txtPrecio.Name = "txtPrecio";
             this.txtPrecio.Size = new System.Drawing.Size(76, 20);
             this.txtPrecio.TabIndex = 21;
@@ -95,7 +96,7 @@
             // txtCategoria
             // 
             this.txtCategoria.Location = new System.Drawing.Point(116, 160);
-            this.txtCategoria.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtCategoria.Margin = new System.Windows.Forms.Padding(2);
             this.txtCategoria.Name = "txtCategoria";
             this.txtCategoria.Size = new System.Drawing.Size(76, 20);
             this.txtCategoria.TabIndex = 20;
@@ -103,7 +104,7 @@
             // txtTitulo
             // 
             this.txtTitulo.Location = new System.Drawing.Point(116, 113);
-            this.txtTitulo.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtTitulo.Margin = new System.Windows.Forms.Padding(2);
             this.txtTitulo.Name = "txtTitulo";
             this.txtTitulo.Size = new System.Drawing.Size(76, 20);
             this.txtTitulo.TabIndex = 19;
@@ -161,7 +162,7 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "FormEditar";
             this.Text = "FormEditar";
             this.ResumeLayout(false);
