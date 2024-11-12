@@ -1,9 +1,12 @@
-﻿using System;
+﻿using RestSharp;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -15,57 +18,39 @@ namespace TFI_API.Presentación
 {
     public partial class FormCrear : Form
     {
+        string url = ConfigurationManager.AppSettings["ApiUrl"];
         private ErrorProvider _errorProvider = new ErrorProvider();
-        public List<Producto> newProduct { get; private set; }
+        public Producto productoNuevo;
 
-        
-        public FormCrear(List<Producto> existingProducts)
+
+        public FormCrear()
         {
             InitializeComponent();
-            this.newProduct = existingProducts;
+            btnAgregar.Enabled = true;
+            GetNextProductId();
         }
 
-        /*public FormCrear()
+        private void GetNextProductId()
         {
-        }*/
-
-        private void btnAgregar_Click(object sender, EventArgs e)
-        {
-            ConexionAPI conexionApi = new ConexionAPI();
-            string title = txtTitulo.Text;
-            string priceText = txtPrecio.Text;
-            decimal price = Convert.ToDecimal(priceText); 
-            int id = int.Parse(txtId.Text);
-
-            if (!ValidateFields())
+            try
             {
-                MessageBox.Show("Por favor, corrija los errores antes de continuar.", "Error de validación", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                var client = new RestClient(url);
+                var request = new RestRequest("products", Method.Get);
+                var response = client.Execute<List<Producto>>(request);
+                if (response.IsSuccessful && response.Data != null)
+                {
+                    int nuevoId = response.Data.Max(p => p.Id) + 1;
+                    txtId.Text = nuevoId.ToString();
+                }
+                else
+                {
+                    MessageBox.Show("Error al obtener el Id, intente nuevamente.");
+                }
             }
-
-            Producto product = new Producto()
+            catch (Exception ex)
             {
-                Title = txtTitulo.Text,
-                Price = decimal.Parse(txtPrecio.Text),
-                Category = txtCategoria.Text,
-                Description = txtDescripcion.Text
-            };
-
-            MessageBox.Show(conexionApi.PostProducts(newProduct, product));
-            this.DialogResult = DialogResult.OK;
-            this.Dispose();
-        }
-        private void FormCrear_Load(object sender, EventArgs e)
-        {
-            txtId.Text = GetNextProductId().ToString();
-        }
-        private int GetNextProductId()
-        {
-            if (newProduct != null && newProduct.Count > 0)
-            {
-                return newProduct.Max(p => p.Id) + 1;
+                MessageBox.Show($"Ocurrió un error al obtener el Id: {ex.Message}");
             }
-            return 1;
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -99,9 +84,10 @@ namespace TFI_API.Presentación
             return isValid;
         }
 
-        private void btnAgregar_Click_1(object sender, EventArgs e)
+        private void btnAgregar_Click(object sender, EventArgs e)
         {
-            ConexionAPI conexionApi = new ConexionAPI();
+            var conexionApi = new ConexionAPI(url);
+
             string title = txtTitulo.Text;
             string priceText = txtPrecio.Text;
             decimal price = Convert.ToDecimal(priceText);
@@ -115,13 +101,17 @@ namespace TFI_API.Presentación
 
             Producto product = new Producto()
             {
+                Id = int.Parse(txtId.Text),
                 Title = txtTitulo.Text,
                 Price = decimal.Parse(txtPrecio.Text),
                 Category = txtCategoria.Text,
                 Description = txtDescripcion.Text
             };
 
-            MessageBox.Show(conexionApi.PostProducts(newProduct, product));
+            productoNuevo = new ConexionAPI(url).PostProducts(product, url);
+           
+            MessageBox.Show("Producto agregado exitosamente");
+
             this.DialogResult = DialogResult.OK;
             this.Dispose();
         }

@@ -3,8 +3,10 @@ using NLog;
 using RestSharp;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Net;
+using System.Security.Policy;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -14,17 +16,19 @@ namespace TFI_API.Datos
 {
     public class ConexionAPI
     {
+        string url = ConfigurationManager.AppSettings["ApiUrl"];
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         RestClient client;
         List<string> Categories;
 
+        /*public ConexionAPI(string url)
+        {
+            client = new RestClient(url);
+        }*/
+
         public ConexionAPI(string url)
         {
             client = new RestClient(url);
-        }
-
-        public ConexionAPI()
-        {
         }
 
         public string GetProducts(List<Producto> listProductsToUpdate)
@@ -161,36 +165,25 @@ namespace TFI_API.Datos
                 logger.Error(ex, "Ocurrio un error en el metodo SortResults.");
             }
         }
-        public string PostProducts(List<Producto> listProductsToUpdate, Producto newProduct)
+        public Producto PostProducts( Producto productoNuevo, string url)
         {
             try
             {
-                logger.Info("Llamada al método PostProducts.");
-
-                // Configuración de la solicitud
+                var client = new RestClient(url);
                 var request = new RestRequest("products", Method.Post);
-                request.AddJsonBody(newProduct);
+                request.AddJsonBody(productoNuevo);
+                var response = client.Execute<Producto>(request);
 
-                // Realiza la solicitud POST
-                var response = client.Post(request);
-
-                // Verificación de la respuesta
-                if (response.IsSuccessful && response.StatusCode == HttpStatusCode.Created)
+                if (!response.IsSuccessful)
                 {
-                    listProductsToUpdate.Add(newProduct);
-                    logger.Info($"Producto '{newProduct.Title}' agregado correctamente.");
-                    return "Producto agregado correctamente.";
+                    throw new Exception($"Error: {response.ErrorMessage}");
                 }
-                else
-                {
-                    logger.Warn($"Error al agregar el producto '{newProduct.Title}'. Código de estado: {response.StatusCode}. Mensaje: {response.Content}");
-                    return $"No se pudo agregar el producto. Código de estado: {response.StatusCode}";
-                }
+                return productoNuevo;
             }
             catch (Exception ex)
             {
-                logger.Error(ex, "Ocurrió un error en el método PostProducts.");
-                return "Ocurrió un error al agregar el producto.";
+                logger.Error(ex, "Error en el método CrearProducto.", url, productoNuevo);
+                return null;
             }
         }
         public string DeleteProducts(List<Producto> listProductsToUpdate, List<int> listIds)

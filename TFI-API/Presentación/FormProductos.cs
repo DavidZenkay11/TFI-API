@@ -30,18 +30,7 @@ namespace TFI_API
             //CargarProductos();
         }
         
-      /* public void CargarProductos()
-        {
-            try
-            {
-                //var products = conexionApi.GetProducts();
-                //dgvProductos.DataSource = products;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error al cargar los productos: {ex.Message}");
-            }
-        }*/
+
 
         public void btnEliminar_Click(object sender, EventArgs e)
         {
@@ -67,24 +56,22 @@ namespace TFI_API
             }
         }
 
-        /*public void btnAgregar_Click(object sender, EventArgs e)
-        {
-           // FormCrear formCrear = new FormCrear();
-            //formCrear.Show();
-        }*/
+
 
         private void btnAgregar_Click_1(object sender, EventArgs e)
         {
-          
-            
-            using (FormCrear formcrear = new FormCrear(this.Products))
+            using (FormCrear fCrear = new FormCrear())
             {
-                if (formcrear.ShowDialog() == DialogResult.OK)
+                if (fCrear.ShowDialog() == DialogResult.OK)
                 {
-                    this.Products = formcrear.newProduct;
-
+                    var product = dgvProductos.DataSource as List<Producto> ?? new List<Producto>();
+                    product.Add(fCrear.productoNuevo);
                     dgvProductos.DataSource = null;
-                    dgvProductos.DataSource = this.Products;
+                    dgvProductos.DataSource = product;
+                }
+                else
+                {
+                    MessageBox.Show("Error al agregar el producto");
                 }
             }
         }
@@ -150,18 +137,6 @@ namespace TFI_API
             var filteredProducts = (List<Producto>)dgvProductos.DataSource;
             var selectedProduct = filteredProducts[e.RowIndex];
 
-            /*using (FormEditar form = new FormEditar(selectedProduct, this.Products, this.Categorias))
-            {
-                if (form.ShowDialog() == DialogResult.OK)
-                {
-                    this.Categorias = form.newCategory;
-
-                    cmbCategoria.DataSource = null;
-                    cmbCategoria.DataSource = Categorias;
-                    dgvProductos.Refresh();
-                    cmbCategoria.SelectedIndex = 0;
-                }
-            }*/
         }
 
         private void btnAscDesc_Click(object sender, EventArgs e)
