@@ -190,5 +190,19 @@ namespace TFI_API
                 MessageBox.Show("Por favor, seleccione una fila.");
             }
         }
+
+        private void btnEditar_Click(object sender, EventArgs e)
+        {
+            if (dgvProductos.SelectedRows.Count > 0)
+            {
+                int id = (int)dgvProductos.SelectedRows[0].Cells["Id"].Value;
+                FormEditar fEditar = new FormEditar(id, this);
+                fEditar.ShowDialog();
+            }
+            else
+            {
+                MessageBox.Show("Seleccione un producto para editar.");
+            }
+        }
     }
 }

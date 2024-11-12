@@ -19,15 +19,12 @@ namespace TFI_API.Presentación
         private Producto _product;
         public List<Producto> EditedProducts { get; private set; }
         public List<string> newCategory { get; private set; }
-        public FormEditar()
+        public FormEditar(int id, FormCrear form)
         {
             InitializeComponent();
         }
 
-        private void FormEditar_Load(object sender, EventArgs e)
-        {
 
-        }
         private void InitializeProductFields(Producto product)
         {
             txtId.Text = product.Id.ToString();
