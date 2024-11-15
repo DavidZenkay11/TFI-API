@@ -117,4 +117,51 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        AAABAAEAGBgAAAEAIACICQAAFgAAACgAAAAYAAAAMAAAAAEAIAAAAAAAAAkAAKYAAACmAAAAAAAAAAAA
+        AAAAAADFAAAApwAAAGwAAAAxAAAAA////wD///8A////AP///wD///8A////AP///wD///8A////AP//
+        /wD///8A////AP///wD///8A////AP///wD///8A////AP///wAAAACnAAAA/wAAAP8AAAD/AAAA8wAA
+        ALsAAABR////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP//
+        /wD///8A////AP///wAAAABsAAAA/wAAAM4AAAC7AAAA8gAAAP8AAAD/AAAAsQAAAAz///8A////AP//
+        /wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wAAAAAxAAAA/wAA
+        ALv///8AAAAAggAAAP8AAAD/AAAA/wAAAMMAAAAM////AP///wD///8A////AP///wD///8A////AP//
+        /wD///8A////AP///wD///8A////AP///wAAAAADAAAA8wAAAPIAAACCAAAA/wAAAO4AAAA+AAAAwwAA
+        AP8AAADDAAAADP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP//
+        /wD///8AAAAAuwAAAP8AAAD/AAAA7gAAADL///8AAAAADAAAAMQAAAD/AAAAwwAAAAz///8A////AP//
+        /wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8AAAAAUAAAAP8AAAD/AAAAQ///
+        /wD///8A////AAAAAA0AAADEAAAA/wAAAMMAAAAM////AP///wD///8A////AP///wD///8A////AP//
+        /wD///8A////AP///wD///8A////AAAAAK0AAAD/AAAAzQAAABH///8A////AP///wAAAAANAAAAxQAA
+        AP8AAADDAAAADP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AAAA
+        AAoAAAC+AAAA/wAAAM0AAAAR////AP///wD///8AAAAADQAAAMUAAAD/AAAAwwAAAAz///8A////AP//
+        /wD///8A////AP///wD///8A////AP///wD///8A////AP///wAAAAAKAAAAvgAAAP8AAADMAAAAEf//
+        /wD///8A////AAAAAA0AAADGAAAA/wAAAMMAAAAM////AP///wD///8A////AP///wD///8A////AP//
+        /wD///8A////AP///wD///8AAAAACgAAAL4AAAD/AAAAzAAAABD///8A////AP///wAAAAANAAAAxgAA
+        AP8AAADDAAAADP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AAAA
+        AAoAAAC/AAAA/wAAAMsAAAAQ////AP///wD///8AAAAADgAAAMcAAAD/AAAAwwAAAAz///8A////AP//
+        /wD///8A////AP///wD///8A////AP///wD///8A////AP///wAAAAAKAAAAvwAAAP8AAADLAAAAEP//
+        /wD///8A////AAAAAA4AAADHAAAA/wAAAMMAAAAM////AP///wD///8A////AP///wD///8A////AP//
+        /wD///8A////AP///wD///8AAAAACgAAAMAAAAD/AAAAygAAABD///8A////AP///wAAAAAOAAAAyAAA
+        AP8AAADDAAAADP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AAAA
+        AAsAAADAAAAA/wAAAMoAAAAP////AP///wD///8AAAAAEAAAAOsAAAD/AAAAwwAAAAz///8A////AP//
+        /wD///8A////AP///wD///8A////AP///wD///8A////AP///wAAAAALAAAAwAAAAP8AAADJAAAAD///
+        /wAAAAABAAAAlgAAAP8AAAD/AAAA/wAAAMMAAAAM////AP///wD///8A////AP///wD///8A////AP//
+        /wD///8A////AP///wD///8AAAAACwAAAMEAAAD/AAAAyQAAABAAAACWAAAA/wAAAOoAAAA8AAAAyQAA
+        AP8AAADDAAAADP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AAAA
+        AAsAAADBAAAA/wAAAOsAAAD/AAAA6gAAAC0AAAAVAAAA0gAAAP8AAAD/AAAAwgAAAAb///8A////AP//
+        /wD///8A////AP///wD///8A////AP///wD///8A////AP///wAAAAALAAAAwQAAAP8AAAD/AAAAPAAA
+        ABUAAADSAAAA/wAAAL4AAADMAAAA/wAAAID///8A////AP///wD///8A////AP///wD///8A////AP//
+        /wD///8A////AP///wD///8AAAAACwAAAMIAAAD/AAAAyQAAANIAAAD/AAAAvQAAAAoAAAAyAAAA/wAA
+        ANr///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AAAA
+        AAwAAADCAAAA/wAAAP8AAAC+AAAACv///wAAAAAKAAAA9gAAAPD///8A////AP///wD///8A////AP//
+        /wD///8A////AP///wD///8A////AP///wD///8A////AP///wAAAAAMAAAAwwAAAP8AAADJAAAAMAAA
+        AAoAAACHAAAA/wAAALv///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP//
+        /wD///8A////AP///wD///8AAAAADAAAAMIAAAD/AAAA/wAAAPYAAAD/AAAA+gAAADL///8A////AP//
+        /wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AAAA
+        AAUAAAB9AAAA2QAAAPAAAAC5AAAAMP///wAH//8AAf//AAB//wAQP/8AAB//AIIP/wCHB/8Aw4P/AMHB
+        /wDg4P8A8HB/APg4PwD8HB8A/g4PAP8HBwD/ggMA/8ABAP/gAAD/8AAA//gAAP/8CAD//gAA//8AAP//
+        gQA=
+</value>
+  </data>
 </root>

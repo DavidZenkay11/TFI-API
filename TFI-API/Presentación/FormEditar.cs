@@ -20,7 +20,7 @@ namespace TFI_API.Presentación
         string url = ConfigurationManager.AppSettings["ApiUrl"];
         private readonly FormProductos formProductos;
         private readonly ErrorProvider errorProvider = new ErrorProvider();
-        public Producto ProductoActualizado { get; set; }
+        public Producto ProductoEditado { get; set; }
         public FormEditar(int id, FormProductos formProductos)
         {
             InitializeComponent();
@@ -49,12 +49,12 @@ namespace TFI_API.Presentación
                     }
                     else
                     {
-                        MostrarError("No se encontraron datos para el producto solicitado.", "Respuesta vacía.");
+                        MostrarError("No se encontraron datos para el producto solicitado.", "Sin respuesta");
                     }
                 }
                 else
                 {
-                    MostrarError("Error al cargar el producto", response.ErrorMessage ?? "Sin detalles adicionales.");
+                    MostrarError("Error al cargar el producto", response.ErrorMessage ?? ".");
                 }
             }
             catch (Exception ex)
@@ -85,7 +85,7 @@ namespace TFI_API.Presentación
             if (ValidarCampos())
             {
 
-                var productoActualizado = new Producto
+                var productoEditado = new Producto
                 {
                     Id = int.Parse(txtId.Text),
                     Price = decimal.Parse(txtPrecio.Text),
@@ -94,14 +94,14 @@ namespace TFI_API.Presentación
                     Category = txtCategoria.Text
                 };
 
-                GuardarProducto(productoActualizado);
-                ProductoActualizado = productoActualizado;
+                GuardarProducto(productoEditado);
+                ProductoEditado = productoEditado;
                 this.Close();
             }
             else
             {
                 DialogResult result = MessageBox.Show(
-                    "Algunos campos obligatorios están vacíos o no cumplen con los requisitos. ¿Querés cancelar la edición de producto?",
+                    "Algunos campos obligatorios están vacíos o no cumplen con los requisitos. ¿Cancelar la edición de producto?",
                     "Error de validación",
                     MessageBoxButtons.YesNo,
                     MessageBoxIcon.Warning

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using NLog;
+using RestSharp;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -68,12 +70,12 @@ namespace TFI_API
             {
                 if (selectedCategory == "All")
                 {
-                    conexionApi.LimitResult(Products, limit);
+                    conexionApi.LimitProduct(Products, limit);
                 }
                 else
                 {
                     conexionApi.GetInCategory(ProductoFiltrado, selectedCategory);
-                    conexionApi.LimitResult(ProductoFiltrado, limit);
+                    conexionApi.LimitProduct(ProductoFiltrado, limit);
                 }
             }
             else
@@ -165,10 +167,17 @@ namespace TFI_API
                     FormEditar fEditar = new FormEditar(id, this);
                     if (fEditar.ShowDialog() == DialogResult.OK)
                     {
-                        var productoActualizado = fEditar.ProductoActualizado;
-                        if (productoActualizado != null)
+                        var productoEditado = fEditar.ProductoEditado;
+                        if (productoEditado != null)
                         {
-                            EditarProducto(productoActualizado);
+                            var productList = dgvProductos.DataSource as List<Producto>;
+                            int index = productList.FindIndex(p => p.Id == productoEditado.Id);
+                            if (index != -1)
+                            {
+                                productList[index] = productoEditado;
+                                dgvProductos.DataSource = null;
+                                dgvProductos.DataSource = productList;
+                            }
                         }
                     }
                 }
@@ -182,19 +191,20 @@ namespace TFI_API
                 MessageBox.Show("Seleccione un producto para editar.");
             }
         }
-        public void EditarProducto(Producto productoActualizado)
+        public void EditarProducto(Producto productoEditado)
         {
             foreach (DataGridViewRow row in dgvProductos.Rows)
             {
-                if ((int)row.Cells["Id"].Value == productoActualizado.Id)
+                if ((int)row.Cells["Id"].Value == productoEditado.Id)
                 {
-                    row.Cells["Price"].Value = productoActualizado.Price;
-                    row.Cells["Title"].Value = productoActualizado.Title;
-                    row.Cells["Description"].Value = productoActualizado.Description;
-                    row.Cells["Category"].Value = productoActualizado.Category;
+                    row.Cells["Price"].Value = productoEditado.Price;
+                    row.Cells["Title"].Value = productoEditado.Title;
+                    row.Cells["Description"].Value = productoEditado.Description;
+                    row.Cells["Category"].Value = productoEditado.Category;
                     break;
                 }
             }
         }
+       
     }
 }

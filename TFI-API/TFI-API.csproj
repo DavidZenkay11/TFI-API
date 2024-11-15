@@ -147,5 +147,8 @@
   <ItemGroup>
     <None Include="Resources\132192_delete_icon.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\1891023_dismiss_delete_close_cancel_remove_cercle.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

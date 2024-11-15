@@ -27,10 +27,10 @@ namespace TFI_API.Presentación
         {
             InitializeComponent();
             btnAgregar.Enabled = true;
-            GetNextProductId();
+            ConseguirId();
         }
 
-        private void GetNextProductId()
+        private void ConseguirId()
         {
             try
             {
@@ -57,7 +57,7 @@ namespace TFI_API.Presentación
         {
             this.Close();
         }
-        private bool ValidateFields()
+        private bool ValidarCampos()
         {
             bool isValid = true;
 
@@ -87,17 +87,17 @@ namespace TFI_API.Presentación
         private void btnAgregar_Click(object sender, EventArgs e)
         {
             var conexionApi = new ConexionAPI(url);
-
+            if (!ValidarCampos())
+            {
+                MessageBox.Show("Por favor, corrija los errores antes de continuar.", "Error de validación", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
             string title = txtTitulo.Text;
             string priceText = txtPrecio.Text;
             decimal price = Convert.ToDecimal(priceText);
             int id = int.Parse(txtId.Text);
 
-            if (!ValidateFields())
-            {
-                MessageBox.Show("Por favor, corrija los errores antes de continuar.", "Error de validación", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
+
 
             Producto product = new Producto()
             {

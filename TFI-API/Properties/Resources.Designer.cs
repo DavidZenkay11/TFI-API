@@ -73,6 +73,16 @@ namespace TFI_API.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap _1891023_dismiss_delete_close_cancel_remove_cercle {
+            get {
+                object obj = ResourceManager.GetObject("1891023_dismiss_delete_close_cancel_remove_cercle", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap _73228_augmentation_base_enlargement_examination_growth_icon {
             get {
                 object obj = ResourceManager.GetObject("73228_augmentation_base_enlargement_examination_growth_icon", resourceCulture);

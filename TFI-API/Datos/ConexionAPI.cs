@@ -21,10 +21,6 @@ namespace TFI_API.Datos
         RestClient client;
         List<string> Categories;
 
-        /*public ConexionAPI(string url)
-        {
-            client = new RestClient(url);
-        }*/
 
         public ConexionAPI(string url)
         {
@@ -47,8 +43,7 @@ namespace TFI_API.Datos
                     listProductsToUpdate.Clear();
                     listProductsToUpdate.AddRange(products);
 
-                    // Loguear la salida del método
-                    logger.Info("Metodo GetProducts finalizado correctamente. Lista de productos actualizada.");
+                    logger.Info("Método GetProducts finalizado correctamente. Lista de productos actualizada.");
 
                     return "Conexión Exitosa";
                 }
@@ -61,7 +56,7 @@ namespace TFI_API.Datos
             }
             catch (Exception ex)
             {
-                logger.Error(ex, "Excepcion en el metodo GetProducts");
+                logger.Error(ex, "Ocurrió una excepción en el método GetProducts");
 
                 return "Error al obtener los productos";
             }
@@ -70,7 +65,7 @@ namespace TFI_API.Datos
         {
             try
             {
-                logger.Info($"Llamada al metodo GetCategories.");
+                logger.Info($"Llamada al método GetCategories.");
 
                 var request = new RestRequest("products/categories", Method.Get);
                 var response = client.Get(request);
@@ -82,8 +77,8 @@ namespace TFI_API.Datos
                     ListCategoriesToUpdate.Clear();
                     ListCategoriesToUpdate.AddRange(categories);
 
-                    logger.Info($"Categorias obtenidas correctamente. Categorias: {string.Join(", ", categories)}");
-                    return "Categorias obtenidas correctamente";
+                    logger.Info($"Categorías obtenidas correctamente. Categorías: {string.Join(", ", categories)}");
+                    return "Categorías obtenidas correctamente";
                 }
                 else
                 {
@@ -93,32 +88,32 @@ namespace TFI_API.Datos
             }
             catch (Exception ex)
             {
-                logger.Error(ex, "Ocurrio un error en el metodo GetCategories.");
-                return "Error al obtener las categorias";
+                logger.Error(ex, "Ocurrió un error en el método GetCategories.");
+                return "Ocurrió un error al obtener las categorías";
             }
         }
         public void GetInCategory(List<Producto> ListProductsToUpdate, string category)
         {
             try
             {
-                logger.Info($"Llamada al metodo GetInCategory.");
+                logger.Info($"Llamada al método GetInCategory.");
 
                 var request = new RestRequest($"products/categories/{category}", Method.Get);
                 var response = client.Get(request);
 
                 ListProductsToUpdate.RemoveAll(p => p.Category != category);
-                logger.Info($"Productos filtrados por categoria {category}. Total productos despues de filtrar: {ListProductsToUpdate.Count}");
+                logger.Info($"Productos filtrados por categoría {category}. Total productos después de filtrar: {ListProductsToUpdate.Count}");
             }
             catch (Exception ex)
             {
-                logger.Error(ex, "Ocurrio un error en el metodo GetInCategory.");
+                logger.Error(ex, "Ocurrió un error en el método GetInCategory.");
             }
         }
-        public List<Producto> LimitResult(List<Producto> ListProductsToUpdate, int limitNumber)
+        public List<Producto> LimitProduct(List<Producto> ListProductsToUpdate, int limitNumber)
         {
             try
             {
-                logger.Info($"Llamada al metodo LimitResult.");
+                logger.Info($"Llamada al método LimitProduct.");
 
                 var request = new RestRequest($"products?limit={limitNumber}", Method.Get);
                 var response = client.Get(request);
@@ -128,7 +123,7 @@ namespace TFI_API.Datos
             }
             catch (Exception ex)
             {
-                logger.Error(ex, "Ocurrio un error en el metodo LimitResult.");
+                logger.Error(ex, "Ocurrió un error en el método LimitProduct.");
                 return new List<Producto>();
             }
         }
@@ -136,7 +131,7 @@ namespace TFI_API.Datos
         {
             try
             {
-                logger.Info($"Llamada al metodo SortResults.");
+                logger.Info($"Llamada al método SortResults.");
 
                 var request = new RestRequest("products/products?sort=desc", Method.Get);
                 var response = client.Get(request);
@@ -156,13 +151,13 @@ namespace TFI_API.Datos
                 }
                 else
                 {
-                    logger.Warn($"Error al ordenar los productos. Codigo de estado: {response.StatusCode}");
+                    logger.Warn($"Error al ordenar los productos. Código de estado: {response.StatusCode}");
                 }
 
             }
             catch (Exception ex)
             {
-                logger.Error(ex, "Ocurrio un error en el metodo SortResults.");
+                logger.Error(ex, "Ocurrió un error en el método SortResults.");
             }
         }
         public Producto PostProducts( Producto productoNuevo, string url)
@@ -182,7 +177,7 @@ namespace TFI_API.Datos
             }
             catch (Exception ex)
             {
-                logger.Error(ex, "Error en el método CrearProducto.", url, productoNuevo);
+                logger.Error(ex, "Error en el método PostProducts.", url, productoNuevo);
                 return null;
             }
         }
@@ -192,7 +187,7 @@ namespace TFI_API.Datos
             {
                 foreach (int productId in listIds)
                 {
-                    logger.Info("Ejecutando metodo DeleteProducts");
+                    logger.Info("Ejecutando método DeleteProducts");
                     var request = new RestRequest($"products/{productId}", Method.Delete);
                     var response = client.Delete(request);
 
@@ -204,7 +199,7 @@ namespace TFI_API.Datos
                     }
                     else
                     {
-                        logger.Warn($"Fallo al eliminar productos. Codigo de estado: {response.StatusCode}");
+                        logger.Warn($"Fallo al eliminar productos. Código de estado: {response.StatusCode}");
                         return "Error al llamar a DeleteProducts";
                     }
                 }
@@ -212,7 +207,7 @@ namespace TFI_API.Datos
             }
             catch (Exception ex)
             {
-                logger.Error(ex, "Error en el metodo DeleteProducts");
+                logger.Error(ex, "Error en el método DeleteProducts");
                 return "Error al eliminar el producto";
             }
         }
