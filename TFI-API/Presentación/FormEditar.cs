@@ -17,42 +17,95 @@ namespace TFI_API.Presentación
 {
     public partial class FormEditar : Form
     {
-        string url = ConfigurationManager.AppSettings["urlApi"];
+        string url = ConfigurationManager.AppSettings["ApiUrl"];
         private readonly FormProductos formProductos;
         private readonly ErrorProvider errorProvider = new ErrorProvider();
-        public FormEditar(int id, FormCrear form)
+        public Producto ProductoActualizado { get; set; }
+        public FormEditar(int id, FormProductos formProductos)
         {
             InitializeComponent();
+            this.formProductos = formProductos;
+            CargarProducto(id);
         }
-
-
-        private void InitializeProductFields(Producto product)
+        private void CargarProducto(int id)
         {
-            txtId.Text = product.Id.ToString();
-            txtCategoria.Text = product.Category;
-            txtDescripcion.Text = product.Description;
-            txtTitulo.Text = product.Title;
-            txtPrecio.Text = product.Price.ToString();
+            try
+            {
+                var client = new RestClient(url);
+                var request = new RestRequest($"products/{id}", Method.Get);
+
+                
+                var response = client.Execute<Producto>(request);
+
+                if (response.IsSuccessful)
+                {
+                    if (response.Data != null)
+                    {
+                        txtId.Text = response.Data.Id.ToString();
+                        txtPrecio.Text = response.Data.Price.ToString();
+                        txtTitulo.Text = response.Data.Title;
+                        txtDescripcion.Text = response.Data.Description;
+                        txtCategoria.Text = response.Data.Category;
+                    }
+                    else
+                    {
+                        MostrarError("No se encontraron datos para el producto solicitado.", "Respuesta vacía.");
+                    }
+                }
+                else
+                {
+                    MostrarError("Error al cargar el producto", response.ErrorMessage ?? "Sin detalles adicionales.");
+                }
+            }
+            catch (Exception ex)
+            {
+                MostrarError("Ocurrió un error al cargar el producto", ex.Message);
+            }
         }
+
+        /*private void InitializeProductFields(Producto product)
+        {
+            if (product != null)
+            {
+                txtId.Text = product.Id.ToString();
+                txtCategoria.Text = product.Category;
+                txtDescripcion.Text = product.Description;
+                txtTitulo.Text = product.Title;
+                txtPrecio.Text = product.Price.ToString();
+            }
+            else
+            {
+                MessageBox.Show("No se pudo encontrar el producto.");
+            }
+        }*/
 
         private void btnActualizar_Click(object sender, EventArgs e)
         {
             errorProvider.Clear();
             if (ValidarCampos())
             {
-                var productoActualizado = new Producto();
+
+                var productoActualizado = new Producto
                 {
-                    int Id = int.Parse(txtId.Text);
-                    decimal Price = decimal.Parse(txtPrecio.Text);
-                    string Title = txtTitulo.Text;
-                    string Description = txtDescripcion.Text;
-                    string Category = txtCategoria.Text;
+                    Id = int.Parse(txtId.Text),
+                    Price = decimal.Parse(txtPrecio.Text),
+                    Title = txtTitulo.Text,
+                    Description = txtDescripcion.Text,
+                    Category = txtCategoria.Text
                 };
+
                 GuardarProducto(productoActualizado);
+                ProductoActualizado = productoActualizado;
+                this.Close();
             }
             else
             {
-                DialogResult result = MessageBox.Show("Algunos campos obligatorios están vacíos o no cumplen con los requisitos. ¿Querés cancelar la edición de producto?", "Error de validación", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                DialogResult result = MessageBox.Show(
+                    "Algunos campos obligatorios están vacíos o no cumplen con los requisitos. ¿Querés cancelar la edición de producto?",
+                    "Error de validación",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Warning
+                );
                 if (result == DialogResult.Yes)
                 {
                     this.Close();
@@ -66,6 +119,7 @@ namespace TFI_API.Presentación
                 var client = new RestClient(url);
                 var request = new RestRequest($"products/{producto.Id}", Method.Put).AddJsonBody(producto);
                 var response = client.Put(request);
+
                 if (response.IsSuccessful)
                 {
                     MessageBox.Show("Producto actualizado correctamente.");
@@ -108,5 +162,9 @@ namespace TFI_API.Presentación
             return isValid;
         }
 
+        private void FormEditar_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

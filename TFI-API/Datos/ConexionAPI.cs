@@ -218,17 +218,37 @@ namespace TFI_API.Datos
         }
         public List<Producto> PutProducts(List<Producto> ListProductsToUpdate, Producto productToEdit)
         {
-            var request = new RestRequest($"products/{productToEdit}", Method.Put);
+            try
+            {
+                var request = new RestRequest($"products/{productToEdit.Id}", Method.Put);
 
-            //ApiProducts? response = client.Put<ApiProducts>(request);
 
-            var product = ListProductsToUpdate.Where(item => item.Id == productToEdit.Id).First();
+                request.AddJsonBody(productToEdit);
 
-            ListProductsToUpdate.Remove(product);
-            ListProductsToUpdate.Add(productToEdit);
+                var client = new RestClient(url);
+                var response = client.Execute(request);
 
-            return ListProductsToUpdate;
+                if (!response.IsSuccessful)
+                {
+                    throw new Exception($"Error: {response.ErrorMessage}");
+                }
+
+                var product = ListProductsToUpdate.Where(item => item.Id == productToEdit.Id).FirstOrDefault();
+                if (product != null)
+                {
+                    ListProductsToUpdate.Remove(product);
+                    ListProductsToUpdate.Add(productToEdit);
+                }
+
+                return ListProductsToUpdate;
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Error en el método PutProducts.", url, productToEdit);
+                return ListProductsToUpdate;
+            }
         }
+
     }
 }
 

@@ -115,5 +115,10 @@ namespace TFI_API.Presentación
             this.DialogResult = DialogResult.OK;
             this.Dispose();
         }
+
+        private void FormCrear_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

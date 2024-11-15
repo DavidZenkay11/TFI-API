@@ -88,12 +88,6 @@
   <ItemGroup>
     <Compile Include="Datos\ConexionAPI.cs" />
     <Compile Include="Negocio\Producto.cs" />
-    <Compile Include="Presentación\Eliminar.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Presentación\Eliminar.Designer.cs">
-      <DependentUpon>Eliminar.cs</DependentUpon>
-    </Compile>
     <Compile Include="Presentación\FormCrear.cs">
       <SubType>Form</SubType>
     </Compile>

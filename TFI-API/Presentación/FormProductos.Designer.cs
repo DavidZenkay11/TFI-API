@@ -76,7 +76,7 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(676, 81);
             this.panel1.TabIndex = 1;
-            this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
+
             // 
             // btnAscDesc
             // 
@@ -141,7 +141,7 @@
             this.txtCategoria.Name = "txtCategoria";
             this.txtCategoria.Size = new System.Drawing.Size(76, 20);
             this.txtCategoria.TabIndex = 3;
-            this.txtCategoria.TextChanged += new System.EventHandler(this.txtCategoria_TextChanged);
+
             // 
             // btnAgregar
             // 

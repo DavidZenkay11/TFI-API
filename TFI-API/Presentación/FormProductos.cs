@@ -25,37 +25,8 @@ namespace TFI_API
             Categorias = new List<string>();
             InitializeComponent();
             conexionApi = new ConexionAPI("https://fakestoreapi.com/");
-            //var url = ConfigurationManager.AppSettings["urlApi"].ToString();
-            //MessageBox.Show(url)
-            //CargarProductos();
         }
         
-
-
-        public void btnEliminar_Click(object sender, EventArgs e)
-        {
-            if (dgvProductos.SelectedRows.Count > 0)
-            {
-                List<int> idsAEliminar = new List<int>();
-
-                foreach (DataGridViewRow row in dgvProductos.SelectedRows)
-                {
-                    int idProducto = (int)row.Cells["Id"].Value;
-                    idsAEliminar.Add(idProducto);
-                }
-
-                try
-                {
-                    var products = conexionApi.DeleteProducts((List<Producto>)dgvProductos.DataSource, idsAEliminar);
-                    dgvProductos.DataSource = products; 
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Error al eliminar el producto: {ex.Message}");
-                }
-            }
-        }
-
 
 
         private void btnAgregar_Click_1(object sender, EventArgs e)
@@ -120,15 +91,7 @@ namespace TFI_API
             dgvProductos.DataSource = ProductoFiltrado;
         }
 
-        private void panel1_Paint(object sender, PaintEventArgs e)
-        {
 
-        }
-
-        private void txtCategoria_TextChanged(object sender, EventArgs e)
-        {
-
-        }
 
         private void dgvProductos_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -182,8 +145,8 @@ namespace TFI_API
                 string resultMessage = conexionApi.DeleteProducts(Products, selectedIds);
                 MessageBox.Show(resultMessage);
 
-                dgvProductos.DataSource = null;  // Desvincula el DataSource temporalmente
-                dgvProductos.DataSource = Products;  // Vuelve a asignar la lista actualizada
+                dgvProductos.DataSource = null;  
+                dgvProductos.DataSource = Products;  
             }
             else
             {
@@ -195,9 +158,24 @@ namespace TFI_API
         {
             if (dgvProductos.SelectedRows.Count > 0)
             {
-                int id = (int)dgvProductos.SelectedRows[0].Cells["Id"].Value;
-                FormEditar fEditar = new FormEditar(id, this);
-                fEditar.ShowDialog();
+                var selectedRow = dgvProductos.SelectedRows[0];
+                if (selectedRow.Cells["Id"].Value != DBNull.Value)
+                {
+                    int id = (int)selectedRow.Cells["Id"].Value;
+                    FormEditar fEditar = new FormEditar(id, this);
+                    if (fEditar.ShowDialog() == DialogResult.OK)
+                    {
+                        var productoActualizado = fEditar.ProductoActualizado;
+                        if (productoActualizado != null)
+                        {
+                            EditarProducto(productoActualizado);
+                        }
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("La fila seleccionada no tiene un ID válido.");
+                }
             }
             else
             {
