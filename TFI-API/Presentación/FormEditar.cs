@@ -63,21 +63,7 @@ namespace TFI_API.Presentación
             }
         }
 
-        /*private void InitializeProductFields(Producto product)
-        {
-            if (product != null)
-            {
-                txtId.Text = product.Id.ToString();
-                txtCategoria.Text = product.Category;
-                txtDescripcion.Text = product.Description;
-                txtTitulo.Text = product.Title;
-                txtPrecio.Text = product.Price.ToString();
-            }
-            else
-            {
-                MessageBox.Show("No se pudo encontrar el producto.");
-            }
-        }*/
+
 
         private void btnActualizar_Click(object sender, EventArgs e)
         {
